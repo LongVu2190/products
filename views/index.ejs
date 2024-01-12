@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products</title>
+  <!-- <link href="/public/output.css" rel="stylesheet"> -->
+  <script src="/public/tailwind.js"></script>
+</head>
+
+<body class="flex flex-col min-h-screen bg-gray-900">
+  <div class="py-8 px-64">
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div class="pb-6 bg-gray-900">
+        <label for="table-search" class="sr-only">Search</label>
+        <div class="relative mt-1">
+          <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                 fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+            </svg>
+          </div>
+          <input type="text" id="table-search"
+                 class="w-full h-10 block ps-10 text-sm text-white border border-gray-600 rounded-lg bg-gray-700 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+                 placeholder="Search for items">
+        </div>
+      </div>
+      <table class="w-full text-sm text-left rtl:text-right text-gray-400">
+        <thead class="text-xs text-gray-400 uppercase bg-gray-700">
+          <tr>
+            <th scope="col" class="px-6 py-3">
+              Id
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Product name
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Brand
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Price
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Delete
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Edit
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (let i=0; i < data.length; i++) { %>
+            <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-600">
+              <th scope="row" class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                <%=data[i].id%>
+              </th>
+              <th scope="row" class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                <%=data[i].name%>
+              </th>
+              <td class="px-6 py-4">
+                <%=data[i].brand%>
+              </td>
+              <td class="px-6 py-4">
+                <%=data[i].price%>$
+              </td>
+              <td class="px-6 py-4">
+                <a href="#" class="font-medium text-red-500 hover:underline">Delete</a>
+              </td>
+              <td class="px-6 py-4">
+                <a href="#" class="font-medium text-blue-500 hover:underline">Edit</a>
+              </td>
+            </tr>
+            <% } %>
+        </tbody>
+      </table>
+
+      <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+           aria-label="Table navigation">
+        <span class="text-sm font-normal text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing
+          <span class="font-semibold text-white">
+            <%=(page - 1) * 10 + 1%>-<%=Math.min(page * 10, quantity)%>
+          </span>
+          of
+          <span class="font-semibold text-white">
+            <%=quantity%>
+          </span>
+        </span>
+        <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+          <li>
+            <form action="/" method="GET">
+              <input type="text" name="page" value="1"
+                     class="mr-4 flex items-center justify-center px-3 h-8 w-12 ms-0 leading-tight text-gray-400 bg-gray-800 border border-gray-700 rounded-md hover:bg-gray-700 hover:text-white">
+              </input>
+            </form>
+          </li>
+          <li>
+            <% if (parseInt(page)===1) { %>
+              <a
+                 class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-400 bg-gray-800 border border-gray-700 rounded-s-lg hover:bg-gray-700 hover:text-white">Previous</a>
+              <% } else { %>
+                <a href="/?page=<%=page - 1%>"
+                   class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-400 bg-gray-800 border border-gray-700 rounded-s-lg hover:bg-gray-700 hover:text-white">Previous</a>
+                <% } %>
+          </li>
+
+          <li>
+            <% if (parseInt(page)===1) { %>
+              <a
+                 class="flex items-center justify-center px-3 h-8 text-white border border-gray-700 bg-gray-700">
+                <%=parseInt(page)%>
+              </a>
+              <% } else if (parseInt(page)===Math.ceil((quantity) / 10)) { %>
+                <a href="/?page=<%=Math.ceil((quantity) / 10) - 2%>"
+                   class="flex items-center justify-center px-3 h-8 leading-tight text-gray-400 bg-gray-800 border border-gray-700 hover:bg-gray-700 hover:text-white">
+                  <%=Math.ceil((quantity) / 10) - 2%>
+                </a>
+                <% } else { %>
+                  <a href="/?page=<%=parseInt(page) - 1%>"
+                     class="flex items-center justify-center px-3 h-8 leading-tight text-gray-400 bg-gray-800 border border-gray-700 hover:bg-gray-700 hover:text-white">
+                    <%=parseInt(page) - 1%>
+                  </a>
+                  <% } %>
+          </li>
+          <li>
+            <% if (parseInt(page)===1) { %>
+              <a href="/?page=2"
+                 class="flex items-center justify-center px-3 h-8 leading-tight text-gray-400 bg-gray-800 border border-gray-700 hover:bg-gray-700 hover:text-white">
+                2
+              </a>
+              <% } else if (parseInt(page)===Math.ceil((quantity) / 10)) { %>
+                <a href="/?page=<%=Math.ceil((quantity) / 10) - 1%>"
+                   class="flex items-center justify-center px-3 h-8 leading-tight text-gray-400 bg-gray-800 border border-gray-700 hover:bg-gray-700 hover:text-white">
+                  <%=Math.ceil((quantity) / 10) - 1%>
+                </a>
+                <% } else { %>
+                  <a
+                     class="flex items-center justify-center px-3 h-8 text-white border border-gray-700 bg-gray-700">
+                    <%=parseInt(page)%>
+                  </a>
+                  <% } %>
+          </li>
+          <li>
+            <% if (parseInt(page)===1) { %>
+              <a href="/?page=3"
+                 class="flex items-center justify-center px-3 h-8 leading-tight text-gray-400 bg-gray-800 border border-gray-700 hover:bg-gray-700 hover:text-white">
+                3
+              </a>
+              <% } else if (parseInt(page)===Math.ceil((quantity) / 10)) { %>
+                <a
+                   class="flex items-center justify-center px-3 h-8 text-white border border-gray-700 bg-gray-700">
+                  <%=Math.ceil((quantity) / 10)%>
+                </a>
+                <% } else { %>
+                  <a href="/?page=<%=parseInt(page) + 1%>"
+                     class="flex items-center justify-center px-3 h-8 leading-tight text-gray-400 bg-gray-800 border border-gray-700 hover:bg-gray-700 hover:text-white">
+                    <%=parseInt(page) + 1%>
+                  </a>
+                  <% } %>
+          </li>
+
+          <li>
+            <% if (parseInt(page)===Math.ceil((quantity) / 10)) { %>
+              <a
+                 class="flex items-center justify-center px-3 h-8 leading-tight text-gray-400 bg-gray-800 border border-gray-700 rounded-e-lg hover:bg-gray-700 hover:text-white">Next</a>
+              <% } else { %>
+                <a href="/?page=<%=parseInt(page) + 1%>"
+                   class="flex items-center justify-center px-3 h-8 leading-tight text-gray-400 bg-gray-800 border border-gray-700 rounded-e-lg hover:bg-gray-700 hover:text-white">Next</a>
+                <% } %>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</body>
+
+</html>
